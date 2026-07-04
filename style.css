@@ -26,6 +26,22 @@ body {
   min-height: 100vh;
 }
 
+.dashboard-bar {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 8px 16px 0;
+}
+.back-to-dashboard {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+}
+.back-to-dashboard:hover { text-decoration: underline; }
+
 .kopfzeile {
   display: flex;
   align-items: center;
