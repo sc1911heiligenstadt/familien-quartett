@@ -7,18 +7,21 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a56a0">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="style.css?v=1.0.2">
+<link rel="stylesheet" href="style.css?v=1.0.3">
 </head>
 <body>
 
-<div class="dashboard-bar"><a href="https://tecko1985.github.io/ToolsUebersicht/" class="back-to-dashboard">← Zurück zum Dashboard</a></div>
-
 <header class="kopfzeile">
-  <span class="kopfzeile-titel">🎴 Familien-Quartett</span>
-  <button class="btn-abbrechen" id="btn-spiel-abbrechen" style="display:none">Abbrechen</button>
-  <span class="kopfzeile-status" id="sync-status">● lokal (Demo)</span>
-  <button class="btn-abbrechen" id="btn-kartenverwaltung-oeffnen" title="Karten bearbeiten">✏️ Karten</button>
-  <img class="header-logo" src="logo.png" alt="1. SC 1911 e.V. Heilbad Heiligenstadt" />
+  <div class="kopfzeile-left">
+    <span class="kopfzeile-titel">🎴 Familien-Quartett</span>
+    <button class="btn-abbrechen" id="btn-spiel-abbrechen" style="display:none">Abbrechen</button>
+  </div>
+  <a href="https://tecko1985.github.io/ToolsUebersicht/" class="back-to-dashboard">← Zurück zum Dashboard</a>
+  <div class="kopfzeile-right">
+    <span class="kopfzeile-status" id="sync-status">● lokal (Demo)</span>
+    <button class="btn-abbrechen" id="btn-kartenverwaltung-oeffnen" title="Karten bearbeiten">✏️ Karten</button>
+    <img class="header-logo" src="logo.png" alt="1. SC 1911 e.V. Heilbad Heiligenstadt" />
+  </div>
 </header>
 
 <main id="app">
