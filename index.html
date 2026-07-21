@@ -14,6 +14,7 @@
 <header class="kopfzeile">
   <div class="kopfzeile-left">
     <span class="kopfzeile-titel">🎴 Familien-Quartett</span>
+    <span class="version-badge version-badge-link" id="version-badge" role="button" tabindex="0" title="Versionshistorie ansehen"></span>
     <button class="btn-abbrechen" id="btn-spiel-abbrechen" style="display:none">Abbrechen</button>
   </div>
   <a href="https://tecko1985.github.io/ToolsUebersicht/" class="back-to-dashboard">← Zurück zum Dashboard</a>
@@ -24,7 +25,13 @@
   </div>
 </header>
 
+<nav class="tabs">
+  <button data-tab="spiel" class="active">Spiel</button>
+  <button data-tab="info">Info</button>
+</nav>
+
 <main id="app">
+ <div class="tab-section active" id="tab-spiel">
 
   <!-- 1: Start -->
   <section class="screen active" id="screen-start">
@@ -222,6 +229,18 @@
     </div>
   </section>
 
+ </div>
+
+ <div class="tab-section" id="tab-info">
+   <div class="info-card">
+     <h2>Über das Familien-Quartett <span class="version-badge" id="version-badge-2"></span></h2>
+     <p>Digitales Kartenspiel nach dem Quartett-Prinzip für mehrere Geräte. Ein Gerät eröffnet den Raum, die anderen treten mit dem Raumcode bei.</p>
+   </div>
+   <div class="info-card">
+     <h2>Änderungen</h2>
+     <div id="changelog-list"></div>
+   </div>
+ </div>
 </main>
 
 <div class="foto-lightbox" id="foto-lightbox">

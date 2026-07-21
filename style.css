@@ -399,3 +399,37 @@ h1, h2 { margin: 0 0 12px; }
 .sieger-name { font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
 .endstand-liste { text-align: left; margin: 0 0 24px; padding-left: 24px; color: var(--muted); }
 .endstand-liste li { margin-bottom: 4px; }
+
+/* ---------- Versionsbadge / Info-Tab ---------- */
+.version-badge {
+  font-size: 11px; font-weight: 600;
+  background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+  color: #fff; border-radius: 999px; padding: 2px 8px; vertical-align: middle;
+}
+.version-badge-link { cursor: pointer; }
+.version-badge-link:hover, .version-badge-link:focus-visible { background: rgba(255,255,255,0.32); }
+nav.tabs {
+  display: flex; gap: 4px; justify-content: center;
+  background: var(--card-bg); border-bottom: 1px solid var(--border);
+  padding: 8px 16px 0;
+}
+nav.tabs button {
+  background: none; border: none; padding: 10px 16px;
+  font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer;
+  border-bottom: 3px solid transparent; border-radius: 8px 8px 0 0;
+}
+nav.tabs button:hover { background: var(--bg); }
+nav.tabs button.active { color: var(--primary); border-bottom-color: var(--primary); }
+.tab-section { display: none; }
+.tab-section.active { display: block; }
+.info-card {
+  background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px; margin-top: 20px; text-align: left;
+}
+.info-card h2 { font-size: 17px; margin: 0 0 10px; color: var(--primary); }
+.info-card p { color: var(--muted); font-size: 14px; line-height: 1.55; margin: 0; }
+.info-card .version-badge { background: var(--bg); border-color: var(--border); color: var(--primary); }
+.changelog-entry { font-size: 14px; }
+.changelog-entry .cv { font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+.changelog-entry .cgt { font-weight: 600; font-size: 13px; margin: 8px 0 4px; }
+.changelog-entry ul { margin: 0; padding-left: 20px; color: var(--muted); line-height: 1.6; }
