@@ -2,7 +2,7 @@
 
 Digitales Kartenspiel nach dem Vorbild des klassischen „Auto Quartett" (Top-Trumps-Prinzip), aber mit Karten von Familienmitgliedern statt Autos. Bis zu 8 Spieler:innen, jede:r mit eigenem Handy.
 
-**Live:** https://tecko1985.github.io/familien-quartett/
+**Live:** https://sc1911heiligenstadt.github.io/familien-quartett/
 
 ## Funktionen
 
