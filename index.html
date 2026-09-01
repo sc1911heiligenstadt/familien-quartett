@@ -263,7 +263,11 @@
 </main>
 
 <div class="foto-lightbox" id="foto-lightbox">
-  <img id="foto-lightbox-img" src="" alt="Großansicht">
+  <!-- ⚠️ Kein src="" hier. Ein leeres src wird gegen die Seiten-URL aufgeloest:
+       der Browser fordert das Verzeichnis selbst als Bild an, scheitert und
+       wirft bei JEDEM Seitenaufruf einen Konsolenfehler. Ohne das Attribut
+       laedt er gar nichts. oeffneFotoLightbox() setzt src beim Oeffnen. -->
+  <img id="foto-lightbox-img" alt="Großansicht">
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -272,6 +276,6 @@
 <script src="firebase-config.js?v=1.0"></script>
 <script src="mock-data.js?v=1.0"></script>
 <script src="game-service.js?v=1.0"></script>
-<script src="app.js?v=1.1"></script>
+<script src="app.js?v=1.2"></script>
 </body>
 </html>

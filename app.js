@@ -765,6 +765,15 @@ if ("serviceWorker" in navigator) {
 const APP_VERSION = "1.0";
 const APP_CHANGELOG = [
   {
+    version: "1.1",
+    groups: [
+      { title: "Kleinigkeit im Hintergrund", items: [
+          "Die Seite forderte bei jedem Aufruf ein Bild an, das es nicht gibt — das Feld für die Foto-Großansicht war leer angelegt, und ein leeres Bildfeld lässt den Browser die Seite selbst als Bild laden. Ein überflüssiger Zugriff und eine Fehlermeldung im Hintergrund, jedes Mal.",
+          "Zu sehen war davon nichts, die Großansicht hat immer funktioniert. Sie funktioniert weiterhin."
+      ]}
+    ]
+  },
+  {
     version: "1.0",
     groups: [
       { title: "Spielen", items: [
