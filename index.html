@@ -7,7 +7,7 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1a56a0">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="style.css?v=1.0">
+<link rel="stylesheet" href="style.css?v=1.1">
 </head>
 <body>
 
@@ -18,7 +18,7 @@
   </div>
   <a href="https://sc1911heiligenstadt.github.io/ToolsUebersicht/" class="back-to-dashboard">← Zurück zum Dashboard</a>
   <div class="kopfzeile-right">
-    <span class="kopfzeile-status" id="sync-status">● lokal (Demo)</span>
+    <span class="kopfzeile-status" id="sync-status">● verbinde …</span>
     <button class="btn-abbrechen" id="btn-kartenverwaltung-oeffnen" title="Karten bearbeiten">✏️ Karten</button>
     <img class="header-logo" src="https://sc1911heiligenstadt.github.io/logo.svg" alt="1. SC 1911 Heiligenstadt e.V." />
   </div>
@@ -243,12 +243,28 @@
     <div class="card" id="ds-info-karte">
       <h2>Datenschutz</h2>
       <p>Dieses Werkzeug gehört zu den internen Anwendungen des
-      1. SC 1911 Heiligenstadt. Die hier erfassten Daten werden ausschließlich
-      für die Vereinsarbeit verwendet. Sie laufen über die Echtzeit-Datenbank
-      von Google (Firebase); das Rechenzentrum steht in Belgien, nicht in
-      Deutschland, und betrieben wird es von Google. Eine Weitergabe an
-      Dritte findet darüber hinaus nur statt, soweit sie für den jeweiligen
-      Zweck erforderlich oder gesetzlich vorgeschrieben ist.</p>
+      1. SC 1911 Heiligenstadt. Gespeichert werden der selbst gewählte
+      Anzeigename, der Spielstand der laufenden Partie sowie eure eigenen
+      Karten samt hochgeladener Fotos, eure Kriterien und die Bestenliste. Es
+      gibt kein Konto und keine E-Mail-Adresse; die Anmeldung an der Datenbank
+      läuft anonym. Firebase legt dafür in deinem Browser eine zufällige
+      Kennung ab; sie bleibt, bis du die Website-Daten löschst.</p>
+      <p><strong>Die Spieldaten verlassen den Verein.</strong> Damit mehrere
+      Geräte dieselbe Partie sehen, laufen sie — <strong>die hochgeladenen
+      Fotos eingeschlossen</strong> — über die Echtzeit-Datenbank von Google
+      (Firebase); das Rechenzentrum steht in Belgien, nicht in Deutschland, und
+      betrieben wird es von Google. <strong>Wenn du das nicht möchtest, gib
+      einen Spitznamen statt deines Namens ein und lade keine Fotos
+      hoch.</strong></p>
+      <p><strong>Der Familien-Code ist das einzige Schloss vor euren Karten.</strong>
+      Karten, Fotos, Kriterien und Bestenliste hängen an dem Code, den ihr euch
+      selbst ausdenkt: er ist Teil der Adresse in der Datenbank und wirkt wie
+      ein gemeinsames Passwort. Wer ihn kennt oder errät, sieht eure Karten,
+      eure Fotos und eure Bestenliste. Gebt ihn nur in der Familie weiter und
+      wählt ihn nicht zu kurz. Anders als der Spielstand einer Partie bleiben
+      diese Daten dauerhaft gespeichert.</p>
+      <p>Eine Weitergabe an weitere Dritte findet nur statt, soweit sie für den
+      jeweiligen Zweck erforderlich oder gesetzlich vorgeschrieben ist.</p>
       <p>Verantwortlich ist der 1. SC 1911 Heiligenstadt, Leineberg 2,
       37308 Heilbad Heiligenstadt, Telefon 03606 612206,
       <a href="mailto:info@sc1911-heiligenstadt.de">info@sc1911-heiligenstadt.de</a>.
@@ -274,9 +290,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="firebase-config.js?v=1.0"></script>
-<script src="mock-data.js?v=1.0"></script>
-<script src="game-service.js?v=1.0"></script>
-<script src="app.js?v=1.0"></script>
+<script src="firebase-config.js?v=1.1"></script>
+<script src="mock-data.js?v=1.1"></script>
+<script src="game-service.js?v=1.1"></script>
+<script src="app.js?v=1.1"></script>
 </body>
 </html>

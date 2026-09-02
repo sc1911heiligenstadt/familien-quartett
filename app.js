@@ -757,6 +757,20 @@ document.getElementById("btn-kb-abbrechen").addEventListener("click", () => {
 
 gameService.onZustandsAenderung(render);
 
+// ---------- Verbindungsanzeige in der Kopfzeile ----------
+// Der Text im Markup ist nur ein Platzhalter für die Sekunde vor dem ersten
+// Firebase-Signal; ab hier steht dort der echte Verbindungszustand.
+const syncStatusEl = document.getElementById("sync-status");
+if (syncStatusEl) {
+  gameService.onVerbindungsAenderung((steht) => {
+    syncStatusEl.textContent = steht ? "● live" : "● offline";
+    syncStatusEl.style.color = steht ? "" : "#fca5a5";
+    syncStatusEl.title = steht
+      ? "Mit der Datenbank verbunden – alle Geräte im Raum sehen denselben Stand."
+      : "Keine Verbindung zur Datenbank – Änderungen kommen gerade nicht an.";
+  });
+}
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js").catch(() => {});
 }
@@ -764,6 +778,14 @@ if ("serviceWorker" in navigator) {
 // ---------- Info-Tab / Versionshistorie ----------
 const APP_VERSION = "1.0";
 const APP_CHANGELOG = [
+  {
+    version: "1.1",
+    groups: [
+      { title: "Behoben", items: [
+          "Die Kopfzeile behauptete unabhängig vom echten Zustand „lokal (Demo)“. Sie zeigt jetzt an, ob die Verbindung zur Datenbank wirklich steht – „live“, wenn alles ankommt, „offline“ im Funkloch."
+      ]}
+    ]
+  },
   {
     version: "1.0",
     groups: [

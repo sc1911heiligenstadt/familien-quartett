@@ -576,6 +576,30 @@ function onZustandsAenderung(callback) {
   }
 }
 
+// --- Verbindungsstatus ------------------------------------------------------
+// Die Realtime Database pflegt unter `.info/connected` einen echten Live-Schalter:
+// true, sobald die Socket-Verbindung zum Server steht, false im Funkloch. Damit zeigt
+// die Kopfzeile den tatsächlichen Zustand statt einer fest verdrahteten Behauptung.
+let verbindungSteht = false;
+const verbindungsCallbacks = [];
+
+db.ref(".info/connected").on("value", (snap) => {
+  verbindungSteht = snap.val() === true;
+  verbindungsCallbacks.forEach((cb) => {
+    try {
+      cb(verbindungSteht);
+    } catch (e) {
+      console.error("Verbindungs-Callback fehlgeschlagen:", e);
+    }
+  });
+});
+
+// Ruft callback(true|false) sofort mit dem aktuellen Stand und danach bei jeder Änderung.
+function onVerbindungsAenderung(callback) {
+  verbindungsCallbacks.push(callback);
+  callback(verbindungSteht);
+}
+
 // --- Gastgeber-Schiedsrichter-Logik (einzige Instanz mit Zugriff auf alle Geheim-Hände) ---
 
 // Verhindert, dass zwei on()-Events im Fenster zwischen Trigger und dem
@@ -872,6 +896,7 @@ const gameService = {
   neuesSpiel,
   getZustand,
   onZustandsAenderung,
+  onVerbindungsAenderung,
   ladeBestenliste,
   ladeKartenZurBearbeitung,
   speichereKartenUebersteuerung,
