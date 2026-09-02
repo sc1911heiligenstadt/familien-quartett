@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Familien-Quartett</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1a56a0">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css?v=1.1">
+</head>
+<body>
+
+<header class="kopfzeile">
+  <div class="kopfzeile-left">
+    <span class="kopfzeile-titel">🎴 Familien-Quartett</span>
+    <button class="btn-abbrechen" id="btn-spiel-abbrechen" style="display:none">Abbrechen</button>
+  </div>
+  <a href="https://sc1911heiligenstadt.github.io/ToolsUebersicht/" class="back-to-dashboard">← Zurück zum Dashboard</a>
+  <div class="kopfzeile-right">
+    <span class="kopfzeile-status" id="sync-status">● verbinde …</span>
+    <button class="btn-abbrechen" id="btn-kartenverwaltung-oeffnen" title="Karten bearbeiten">✏️ Karten</button>
+    <img class="header-logo" src="https://sc1911heiligenstadt.github.io/logo.svg" alt="1. SC 1911 Heiligenstadt e.V." />
+  </div>
+</header>
+
+<nav class="tabs">
+  <button data-tab="spiel" class="active">Spiel</button>
+  <button data-tab="info" style="margin-left:auto;">Info</button>
+</nav>
+
+<main id="app">
+ <div class="tab-section active" id="tab-spiel">
+
+  <!-- 1: Start -->
+  <section class="screen active" id="screen-start">
+    <div class="screen-inhalt zentriert">
+      <h1 class="logo">🎴 Familien-Quartett</h1>
+      <p class="untertitel">Das Kartenspiel für die ganze Familie – nach Vorbild des klassischen Auto-Quartetts.</p>
+
+      <div class="aktion-block">
+        <button class="btn btn-primary btn-grow" id="btn-raum-erstellen">Raum erstellen</button>
+        <label class="checkbox-zeile">
+          <input type="checkbox" id="checkbox-auto-modus">
+          <span>🚗 Auto-Quartett spielen (statt Familien-Quartett)</span>
+        </label>
+
+        <div class="deckgroesse-gruppe">
+          <span class="deckgroesse-label">Kartendeck-Größe</span>
+          <label class="checkbox-zeile">
+            <input type="radio" name="deckgroesse" id="radio-deckgroesse-klein" value="klein">
+            <span>Klein – 5 Karten pro Spieler:in</span>
+          </label>
+          <label class="checkbox-zeile">
+            <input type="radio" name="deckgroesse" id="radio-deckgroesse-normal" value="normal" checked>
+            <span>Normal – 10 Karten pro Spieler:in</span>
+          </label>
+          <label class="checkbox-zeile">
+            <input type="radio" name="deckgroesse" id="radio-deckgroesse-gross" value="gross">
+            <span>Groß – Maximum aus dem Kartenpool</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="trenner"><span>oder</span></div>
+
+      <div class="aktion-block">
+        <input type="text" id="input-raumcode" class="eingabe" placeholder="Raum-Code eingeben" maxlength="6" autocomplete="off">
+        <button class="btn btn-secondary btn-grow" id="btn-raum-beitreten">Raum beitreten</button>
+      </div>
+
+      <p class="hinweis-text" id="start-fehler"></p>
+
+      <button class="btn btn-link" id="btn-bestenliste-oeffnen">🏆 Bestenliste</button>
+    </div>
+  </section>
+
+  <!-- 2: Name-Eingabe -->
+  <section class="screen" id="screen-name-eingabe">
+    <div class="screen-inhalt zentriert">
+      <h2 id="name-eingabe-titel">Wie heißt du?</h2>
+      <input type="text" id="input-spielername" class="eingabe" placeholder="Dein Name" maxlength="20" autocomplete="off">
+      <button class="btn btn-primary btn-grow" id="btn-name-bestaetigen">Weiter</button>
+      <p class="hinweis-text" id="name-eingabe-fehler"></p>
+      <button class="btn btn-link" id="btn-name-zurueck">Zurück</button>
+    </div>
+  </section>
+
+  <!-- 3: Lobby -->
+  <section class="screen" id="screen-lobby">
+    <div class="screen-inhalt">
+      <h2>Warteraum</h2>
+      <div class="raumcode-box">
+        <span class="raumcode-label">Raum-Code</span>
+        <span class="raumcode-wert" id="lobby-raumcode">------</span>
+      </div>
+      <p class="lobby-modus" id="lobby-modus"></p>
+
+      <p class="spieler-zaehler" id="lobby-zaehler">0/8 Spieler:innen</p>
+      <ul class="spieler-liste" id="lobby-spielerliste"></ul>
+
+      <button class="btn btn-secondary btn-grow" id="btn-test-spieler">+ Test-Spieler hinzufügen</button>
+      <button class="btn btn-primary btn-grow" id="btn-spiel-starten" disabled>Spiel starten</button>
+      <p class="hinweis-text" id="lobby-warte-hinweis">Warte, bis der Gastgeber das Spiel startet …</p>
+    </div>
+  </section>
+
+  <!-- 4: Spiel -->
+  <section class="screen" id="screen-spiel">
+    <div class="screen-inhalt">
+      <div class="stapel-status">
+        <span id="spiel-eigene-kartenanzahl">🂠 0 Karten</span>
+        <span id="spiel-status-text" class="status-text">Du bist am Zug</span>
+      </div>
+
+      <div class="karte-buehne" id="spiel-karte-container"></div>
+
+      <p class="hinweis-text" id="spiel-hinweis">Wähle eine Eigenschaft deiner Karte aus.</p>
+    </div>
+  </section>
+
+  <!-- 5: Vergleich -->
+  <section class="screen" id="screen-vergleich">
+    <div class="screen-inhalt">
+      <h2>Vergleich: <span id="vergleich-kategorie-label">–</span></h2>
+      <ul class="vergleich-liste" id="vergleich-liste"></ul>
+      <p class="vergleich-gewinner" id="vergleich-gewinner-text"></p>
+      <button class="btn btn-primary btn-grow" id="btn-vergleich-weiter">Weiter</button>
+      <p class="hinweis-text" id="vergleich-bereit-text"></p>
+    </div>
+  </section>
+
+  <!-- 6: Game Over -->
+  <section class="screen" id="screen-game-over">
+    <div class="screen-inhalt zentriert">
+      <h1 class="sieger-titel">🏆 Spiel beendet!</h1>
+      <p class="sieger-name" id="game-over-sieger"></p>
+      <ol class="endstand-liste" id="game-over-endstand"></ol>
+      <button class="btn btn-primary btn-grow" id="btn-neues-spiel">Neues Spiel</button>
+    </div>
+  </section>
+
+  <!-- 7: Abgebrochen -->
+  <section class="screen" id="screen-abgebrochen">
+    <div class="screen-inhalt zentriert">
+      <h1 class="sieger-titel">🚫 Spiel abgebrochen</h1>
+      <p class="hinweis-text" id="abgebrochen-text">Der Gastgeber hat das Spiel beendet.</p>
+      <button class="btn btn-primary btn-grow" id="btn-abbruch-zurueck">Zurück zum Start</button>
+    </div>
+  </section>
+
+  <!-- 8: Bestenliste -->
+  <section class="screen" id="screen-bestenliste">
+    <div class="screen-inhalt">
+      <h2>🏆 Bestenliste</h2>
+      <table class="bestenliste-tabelle">
+        <thead>
+          <tr><th>Name</th><th>Gespielt</th><th>Gewonnen</th><th>%</th></tr>
+        </thead>
+        <tbody id="bestenliste-koerper"></tbody>
+      </table>
+      <p class="hinweis-text" id="bestenliste-leer" style="display:none">Noch keine beendeten Spiele.</p>
+      <button class="btn btn-link" id="btn-bestenliste-zurueck">Zurück</button>
+    </div>
+  </section>
+
+  <!-- 9: Familien-Code -->
+  <section class="screen" id="screen-familiencode-eingabe">
+    <div class="screen-inhalt zentriert">
+      <h2>🔒 Familien-Code</h2>
+      <p class="untertitel">Bestenliste und Kartenfotos sind nur mit eurem gemeinsamen Familien-Code sichtbar. Einmal pro Gerät eingeben – am besten denselben Code wie alle anderen in der Familie.</p>
+      <input type="text" id="input-familiencode" class="eingabe" placeholder="z. B. MeyerFamilie2024" maxlength="40" autocomplete="off">
+      <button class="btn btn-primary btn-grow" id="btn-familiencode-bestaetigen">Bestätigen</button>
+      <p class="hinweis-text" id="familiencode-fehler"></p>
+      <button class="btn btn-link" id="btn-familiencode-zurueck">Zurück</button>
+    </div>
+  </section>
+
+  <!-- 10: Kartenverwaltung -->
+  <section class="screen" id="screen-kartenverwaltung">
+    <div class="screen-inhalt">
+      <h2>✏️ Karten bearbeiten</h2>
+      <div class="kv-deck-umschalter">
+        <button class="btn btn-secondary kv-deck-btn" id="kv-deck-familie">🎴 Familie</button>
+        <button class="btn btn-secondary kv-deck-btn" id="kv-deck-auto">🚗 Auto</button>
+      </div>
+      <div class="kv-kartenliste" id="kv-kartenliste"></div>
+      <button class="btn btn-secondary btn-grow" id="btn-kv-neue-karte">+ Neue Karte anlegen</button>
+      <button class="btn btn-link" id="btn-kriterien-oeffnen">📊 Kriterien bearbeiten</button>
+      <button class="btn btn-link" id="btn-kartenverwaltung-zurueck">Zurück</button>
+    </div>
+  </section>
+
+  <!-- 11: Karte bearbeiten -->
+  <section class="screen" id="screen-karte-bearbeiten">
+    <div class="screen-inhalt">
+      <h2 id="kb-titel">Karte bearbeiten</h2>
+      <div class="kb-foto-zeile">
+        <img id="kb-foto-vorschau" class="kb-foto-vorschau" src="avatar-placeholder.svg" alt="">
+        <div>
+          <label class="btn btn-secondary" for="kb-foto-input">Foto auswählen</label>
+          <input type="file" id="kb-foto-input" accept="image/*" style="display:none">
+        </div>
+      </div>
+      <label class="kb-feld-label" for="kb-name">Name</label>
+      <input type="text" id="kb-name" class="eingabe" maxlength="30">
+      <div id="kb-rolle-zeile">
+        <label class="kb-feld-label" for="kb-rolle">Rolle / Typ</label>
+        <input type="text" id="kb-rolle" class="eingabe" maxlength="30">
+      </div>
+      <div id="kb-eigenschaften-felder" class="kb-eigenschaften-felder"></div>
+      <p class="hinweis-text" id="kb-fehler"></p>
+      <button class="btn btn-primary btn-grow" id="btn-kb-speichern">Speichern</button>
+      <button class="btn btn-secondary btn-grow" id="btn-kb-zuruecksetzen">Auf Original zurücksetzen</button>
+      <button class="btn btn-link" id="btn-kb-abbrechen">Abbrechen</button>
+    </div>
+  </section>
+
+  <!-- 12: Kriterien bearbeiten -->
+  <section class="screen" id="screen-kriterien-bearbeiten">
+    <div class="screen-inhalt">
+      <h2>📊 Kriterien bearbeiten</h2>
+      <p class="untertitel">Bezeichnung und Icon der Eigenschaften für dieses Kartenset.</p>
+      <div id="kr-kriterien-felder" class="kr-kriterien-felder"></div>
+      <p class="hinweis-text" id="kr-fehler"></p>
+      <button class="btn btn-primary btn-grow" id="btn-kr-speichern">Speichern</button>
+      <button class="btn btn-link" id="btn-kr-zurueck">Zurück</button>
+    </div>
+  </section>
+
+ </div>
+
+ <div class="tab-section" id="tab-info">
+   <div class="info-card">
+     <h2>Über das Familien-Quartett <span class="version-badge" id="version-badge-2"></span></h2>
+     <p>Digitales Kartenspiel nach dem Quartett-Prinzip für mehrere Geräte. Ein Gerät eröffnet den Raum, die anderen treten mit dem Raumcode bei.</p>
+   </div>
+   <div class="info-card">
+     <h2>Änderungen</h2>
+     <div id="changelog-list"></div>
+   </div>
+ 
+    <div class="card" id="ds-info-karte">
+      <h2>Datenschutz</h2>
+      <p>Dieses Werkzeug gehört zu den internen Anwendungen des
+      1. SC 1911 Heiligenstadt. Gespeichert werden der selbst gewählte
+      Anzeigename, der Spielstand der laufenden Partie sowie eure eigenen
+      Karten samt hochgeladener Fotos, eure Kriterien und die Bestenliste. Es
+      gibt kein Konto und keine E-Mail-Adresse; die Anmeldung an der Datenbank
+      läuft anonym. Firebase legt dafür in deinem Browser eine zufällige
+      Kennung ab; sie bleibt, bis du die Website-Daten löschst.</p>
+      <p><strong>Die Spieldaten verlassen den Verein.</strong> Damit mehrere
+      Geräte dieselbe Partie sehen, laufen sie — <strong>die hochgeladenen
+      Fotos eingeschlossen</strong> — über die Echtzeit-Datenbank von Google
+      (Firebase); das Rechenzentrum steht in Belgien, nicht in Deutschland, und
+      betrieben wird es von Google. <strong>Wenn du das nicht möchtest, gib
+      einen Spitznamen statt deines Namens ein und lade keine Fotos
+      hoch.</strong></p>
+      <p><strong>Der Familien-Code ist das einzige Schloss vor euren Karten.</strong>
+      Karten, Fotos, Kriterien und Bestenliste hängen an dem Code, den ihr euch
+      selbst ausdenkt: er ist Teil der Adresse in der Datenbank und wirkt wie
+      ein gemeinsames Passwort. Wer ihn kennt oder errät, sieht eure Karten,
+      eure Fotos und eure Bestenliste. Gebt ihn nur in der Familie weiter und
+      wählt ihn nicht zu kurz. Anders als der Spielstand einer Partie bleiben
+      diese Daten dauerhaft gespeichert.</p>
+      <p>Eine Weitergabe an weitere Dritte findet nur statt, soweit sie für den
+      jeweiligen Zweck erforderlich oder gesetzlich vorgeschrieben ist.</p>
+      <p>Verantwortlich ist der 1. SC 1911 Heiligenstadt, Leineberg 2,
+      37308 Heilbad Heiligenstadt, Telefon 03606 612206,
+      <a href="mailto:info@sc1911-heiligenstadt.de">info@sc1911-heiligenstadt.de</a>.
+      Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung,
+      Datenübertragbarkeit und Widerspruch lassen sich unter dieser Anschrift
+      geltend machen. Beschwerden nimmt der Thüringer Landesbeauftragte für
+      den Datenschutz und die Informationsfreiheit entgegen.</p>
+      <p><a href="https://www.sc1911-heiligenstadt.de/datenschutz/" target="_blank" rel="noopener">Datenschutzerklärung des Vereins</a>
+      &middot;
+      <a href="https://www.sc1911-heiligenstadt.de/impressum-2/" target="_blank" rel="noopener">Impressum</a></p>
+    </div>
+</div>
+</main>
+
+<div class="foto-lightbox" id="foto-lightbox">
+  <!-- ⚠️ Kein src="" hier. Ein leeres src wird gegen die Seiten-URL aufgeloest:
+       der Browser fordert das Verzeichnis selbst als Bild an, scheitert und
+       wirft bei JEDEM Seitenaufruf einen Konsolenfehler. Ohne das Attribut
+       laedt er gar nichts. oeffneFotoLightbox() setzt src beim Oeffnen. -->
+  <img id="foto-lightbox-img" alt="Großansicht">
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js?v=1.1"></script>
+<script src="mock-data.js?v=1.1"></script>
+<script src="game-service.js?v=1.1"></script>
+<script src="app.js?v=1.2"></script>
+</body>
+</html>
