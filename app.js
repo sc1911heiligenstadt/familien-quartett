@@ -779,6 +779,17 @@ if ("serviceWorker" in navigator) {
 const APP_VERSION = "1.0";
 const APP_CHANGELOG = [
   {
+    version: "1.2",
+    groups: [
+      { title: "Datenschutz: wo die Spieldaten wirklich liegen", items: [
+          "Der Hinweis im Info-Reiter behauptete, die Daten lägen auf Servern in Deutschland. Das stimmte nicht. Er sagt jetzt offen: die Spieldaten laufen über die Echtzeit-Datenbank von Google (Firebase), das Rechenzentrum steht in Belgien und betrieben wird es von Google.",
+          "Ausdrücklich genannt sind dabei die hochgeladenen Kartenfotos – auch sie liegen dort.",
+          "Neu steht im Datenschutz-Text, was der Familien-Code eigentlich ist: das einzige Schloss vor euren Karten, Fotos und der Bestenliste. Wer ihn kennt oder errät, sieht alles davon. Er gehört nur in die Familie und sollte nicht zu kurz sein.",
+          "Und die Bitte: wer seinen Namen nicht bei Google haben möchte, nimmt einen Spitznamen und lädt keine Fotos hoch."
+      ]}
+    ]
+  },
+  {
     version: "1.1",
     groups: [
       { title: "Behoben", items: [
