@@ -765,25 +765,35 @@ if ("serviceWorker" in navigator) {
 const APP_VERSION = "1.0";
 const APP_CHANGELOG = [
   {
-    version: "1.1",
-    groups: [
-      { title: "Kleinigkeit im Hintergrund", items: [
-          "Die Seite forderte bei jedem Aufruf ein Bild an, das es nicht gibt — das Feld für die Foto-Großansicht war leer angelegt, und ein leeres Bildfeld lässt den Browser die Seite selbst als Bild laden. Ein überflüssiger Zugriff und eine Fehlermeldung im Hintergrund, jedes Mal.",
-          "Zu sehen war davon nichts, die Großansicht hat immer funktioniert. Sie funktioniert weiterhin."
-      ]}
-    ]
-  },
-  {
     version: "1.0",
     groups: [
       { title: "Spielen", items: [
-          "Quartett auf mehreren Geräten gleichzeitig, ein Gerät eröffnet den Raum.",
-          "Eigene Karten bleiben privat, bis die Runde aufgelöst wird.",
-          "Bockrunden bei Gleichstand."
+          "Quartett auf mehreren Geräten gleichzeitig: ein Gerät eröffnet den Raum, die anderen treten mit dem Raumcode bei.",
+          "Bis zu 8 Mitspielende. Die eigenen Karten bleiben privat, bis die Runde aufgelöst wird.",
+          "Bockrunden bei Gleichstand: der Pott geht an die nächste gewonnene Runde.",
+          "Im Warteraum lassen sich Test-Spieler dazusetzen, wenn gerade niemand sonst da ist."
       ]},
-      { title: "Verwalten", items: [
-          "Eigene Karten anlegen und bestehende anpassen.",
-          "Bestenliste über alle Partien."
+      { title: "Zwei Kartensets, drei Deckgrößen", items: [
+          "Vor dem Eröffnen wählbar: Familien-Quartett oder Auto-Quartett.",
+          "Ebenso die Größe des Kartendecks – klein mit 5 Karten je Person, normal mit 10 oder groß mit allem, was der Kartenpool hergibt."
+      ]},
+      { title: "Eigene Karten", items: [
+          "Unter „Karten bearbeiten“ lassen sich Karten anlegen, umbenennen, mit einem eigenen Foto versehen und in ihren Werten ändern; eine geänderte Karte geht auf Knopfdruck wieder auf das Original zurück.",
+          "Unter „Kriterien bearbeiten“ legt ihr fest, wie die Vergleichswerte heißen und welches Symbol sie tragen.",
+          "Beides gilt je Kartenset getrennt: das Familien- und das Auto-Deck kommen sich nicht in die Quere.",
+          "Ein Foto auf der Karte lässt sich antippen und dann groß ansehen."
+      ]},
+      { title: "Der Familien-Code", items: [
+          "Karten, Kriterien und Bestenliste hängen an einem selbst gewählten Familien-Code – so bekommt jede Familie ihr eigenes Quartett, ohne dass sich zwei Haushalte ins Gehege kommen.",
+          "Einmal eingegeben, merkt sich das Gerät den Code.",
+          "Er wirkt dabei wie ein gemeinsames Passwort: wer ihn kennt, sieht eure Karten und eure Bestenliste – gebt ihn also nur in der Familie weiter."
+      ]},
+      { title: "Bestenliste", items: [
+          "Hält über alle beendeten Partien fest, wer wie oft gespielt und wie oft gewonnen hat, samt Siegquote in Prozent."
+      ]},
+      { title: "Auf allen Geräten derselbe Stand", items: [
+          "Raum, Spielstand, Karten und Bestenliste liegen in einer gemeinsamen Datenbank – jedes Gerät im Raum sieht dieselbe Partie in Echtzeit.",
+          "Die Anmeldung ist anonym: kein Konto, keine E-Mail-Adresse. Gespeichert wird nur der selbst gewählte Anzeigename."
       ]}
     ]
   }

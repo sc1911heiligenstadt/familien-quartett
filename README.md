@@ -12,18 +12,34 @@ sieht jeder seine eigenen Karten auf seinem eigenen Handy.
 2. Die anderen geben den Code im **Warteraum** ein.
 3. Gespielt wird wie beim Quartett: Ein Kriterium ansagen, die Werte
    **vergleichen**, wer den besseren hat, bekommt die Karte.
-4. Die **Bestenliste** hält fest, wer wie oft gewonnen hat.
+4. Bei Gleichstand geht der Pott in die **Bockrunde**.
+5. Die **Bestenliste** hält fest, wer wie oft gespielt und gewonnen hat.
+
+Bis zu **8 Mitspielende**. Vor dem Eröffnen wählbar: **Familien-Quartett oder
+Auto-Quartett** und die Größe des Decks (klein mit 5 Karten je Person, normal mit
+10 oder groß mit allem, was der Kartenpool hergibt). Ist gerade niemand sonst da,
+setzt der Warteraum auf Knopfdruck **Test-Spieler** dazu.
+
+Oben rechts liegt der **Info**-Reiter mit der Änderungsliste und dem
+Datenschutz-Hinweis.
 
 ## Eigene Karten
 
 Das Spiel ist nicht auf ein festes Kartenset festgelegt: Unter **Karten
 bearbeiten** und **Kriterien bearbeiten** lässt sich ein eigenes Quartett bauen
-— eigene Karten, eigene Vergleichswerte.
+— eigene Karten mit eigenem Foto, eigene Vergleichswerte samt Bezeichnung und
+Symbol. Eine geänderte Karte geht auf Knopfdruck wieder auf das Original zurück,
+und beide Kartensets werden getrennt gepflegt.
 
 ## Zugang
 
 Dieses Werkzeug braucht **keine Anmeldung** über das Vereinskonto. Wer den
 Raumcode hat, spielt mit.
+
+Karten, Kriterien und Bestenliste hängen an einem selbst gewählten
+**Familien-Code**. Er trennt die Sets verschiedener Haushalte voneinander und
+wirkt dabei wie ein gemeinsames Passwort — wer ihn kennt, sieht eure Karten und
+eure Bestenliste.
 
 ## Lokal starten
 
