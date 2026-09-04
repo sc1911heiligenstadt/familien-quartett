@@ -779,6 +779,14 @@ if ("serviceWorker" in navigator) {
 const APP_VERSION = "1.0";
 const APP_CHANGELOG = [
   {
+    version: "1.1",
+    groups: [
+      { title: "Behoben", items: [
+          "Nach jedem Stich geht es sofort weiter, sobald alle Mitspielenden am Gerät auf „Weiter“ getippt haben. Vorher wartete jede Runde zusätzlich zehn Sekunden, sobald eine KI mitspielte — sie konnte gar nicht bestätigen, und die Anzeige „bereit“ erreichte ihr Ziel nie."
+      ]}
+    ]
+  },
+  {
     version: "1.0",
     groups: [
       { title: "Wo die Spieldaten liegen", items: [

@@ -647,9 +647,16 @@ function pruefeWeiterBedingungAlsHost() {
   const startZeit = runde.vergleichStartZeit;
   if (weiterTransferAusgeloestFuer === startZeit) return;
 
-  const aktiveUids = Object.keys(raum.spieler).filter(uid => !raum.spieler[uid].istAusgeschieden);
+  // Nur Menschen koennen bestaetigen: bestaetigeWeiter() traegt ausschliesslich die EIGENE
+  // uid ein, und fuer KI-Mitspielende gibt es kein Geraet, das das taete. Zaehlte man sie mit,
+  // waere alleBestaetigt immer falsch und JEDE Runde liefe in den 10-Sekunden-Notfalltimer
+  // unten — bei einer langen Partie summiert sich das auf Stunden reiner Wartezeit
+  // (gefunden in der Bugjagd vom 04.09.2026).
+  const aktiveUids = Object.keys(raum.spieler).filter(uid => !raum.spieler[uid].istAusgeschieden && !raum.spieler[uid].istSimuliert);
   const bestaetigtUids = runde.weiterBestaetigtVon ? Object.keys(runde.weiterBestaetigtVon) : [];
-  const alleBestaetigt = aktiveUids.length > 0 && aktiveUids.every(uid => bestaetigtUids.includes(uid));
+  // Kein "length > 0" mehr: sind gar keine Menschen mehr aktiv, muss niemand bestaetigen —
+  // dann soll es sofort weitergehen statt zehn Sekunden auf niemanden zu warten.
+  const alleBestaetigt = aktiveUids.every(uid => bestaetigtUids.includes(uid));
 
   if (alleBestaetigt) {
     weiterTransferAusgeloestFuer = startZeit;
