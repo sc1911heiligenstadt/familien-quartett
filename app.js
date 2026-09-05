@@ -50,9 +50,33 @@ function effektiveKategorien(kartenSet) {
   return kategorienCache[kartenSet] || getKategorien(kartenSet);
 }
 
+/* ⚠️ Bildschirme, die NICHT aus der Spielphase folgen. Sie gehen vor, solange
+   sie offen sind — sonst reisst sie das nächste Firebase-Ereignis des Raums
+   weg, und getippte Werte sind ohne Meldung verloren. Genau das passierte in
+   der Kartenbearbeitung, sobald jemand beitrat, der Gastgeber eine KI
+   dazusetzte oder das Spiel startete: `render()` schaltete bedingungslos auf
+   den Bildschirm der Phase. Die Schwester-Oberfläche in `spiele/quartett`
+   führt dafür seit jeher `ansicht.ueberlagert`. */
+const UEBERLAGERTE_SCHIRME = [
+  "screen-name-eingabe",
+  "screen-bestenliste",
+  "screen-familiencode-eingabe",
+  "screen-kartenverwaltung",
+  "screen-karte-bearbeiten",
+  "screen-kriterien-bearbeiten"
+];
+
+/* In diesen Phasen darf eine Überlagerung offen bleiben. Sobald eine Partie
+   läuft oder abgebrochen wurde, muss sie weichen — dann gehört der Bildschirm
+   dem Spiel. */
+const RUHIGE_PHASEN = ["start", "beendet"];
+
+let offeneUeberlagerung = null;
+
 function showScreen(screenId) {
   document.querySelectorAll(".screen").forEach(el => el.classList.remove("active"));
   document.getElementById(screenId).classList.add("active");
+  offeneUeberlagerung = UEBERLAGERTE_SCHIRME.includes(screenId) ? screenId : null;
 }
 
 function getSpielerName(zustand, spielerId) {
@@ -300,6 +324,15 @@ function render(zustand) {
   } else {
     sichereBildschirmWach();
   }
+  /* Eine offene Überlagerung geht vor — aber nur, solange nichts Dringendes
+     ansteht. Fängt eine Partie an oder wird sie abgebrochen, gehört der
+     Bildschirm dem Spiel. */
+  if (offeneUeberlagerung && RUHIGE_PHASEN.includes(zustand.phase)) {
+    renderAbbrechenButton(zustand);
+    renderKartenverwaltungButton(zustand);
+    return;
+  }
+
   showScreen(SCREEN_FUER_PHASE[zustand.phase] || "screen-start");
   renderAbbrechenButton(zustand);
   renderKartenverwaltungButton(zustand);
@@ -807,6 +840,14 @@ if ("serviceWorker" in navigator) {
 // ---------- Info-Tab / Versionshistorie ----------
 const APP_VERSION = "1.0";
 const APP_CHANGELOG = [
+  {
+    version: "1.5",
+    groups: [
+      { title: "Behoben", items: [
+          "Wer eine Karte bearbeitete und dabei Werte eintippte, verlor alles, sobald irgendetwas im Raum passierte — jemand trat bei, eine KI kam dazu, das Spiel startete. Die App sprang dann ohne Vorwarnung auf den Spielbildschirm. Jetzt bleibt die Kartenbearbeitung stehen; sie weicht nur noch, wenn wirklich eine Partie anfängt."
+      ]}
+    ]
+  },
   {
     version: "1.4",
     groups: [
