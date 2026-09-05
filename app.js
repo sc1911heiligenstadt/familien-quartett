@@ -11,7 +11,12 @@ const SCREEN_FUER_PHASE = {
   abgebrochen: "screen-abgebrochen"
 };
 
-const PHASEN_MIT_ABBRUCH_BUTTON = ["amZug", "warteAufAndere", "vergleich"];
+/* ⚠️ `lobby` gehört dazu. Ohne sie sass ein Gast im Warteraum fest: der
+   Knopf wurde ausgeblendet, und Neuladen half nicht — der Raumcode steht im
+   localStorage und holt einen sofort in denselben Warteraum zurück.
+   Schloss der Gastgeber einfach den Tab, kam der Gast ohne Löschen der
+   Website-Daten nie wieder auf den Startbildschirm. */
+const PHASEN_MIT_ABBRUCH_BUTTON = ["lobby", "amZug", "warteAufAndere", "vergleich"];
 
 let ausstehenderModus = null; // "erstellen" | "beitreten"
 let raumcodeEingabe = "";
@@ -246,7 +251,11 @@ function renderAbbrechenButton(zustand) {
   btn.style.display = sichtbar ? "inline-block" : "none";
   if (sichtbar) {
     const eigener = getEigenerSpieler(zustand);
-    btn.textContent = eigener && eigener.istHost ? "Spiel abbrechen" : "Spiel verlassen";
+    const imWarteraum = zustand.phase === "lobby";
+    const istHost = !!(eigener && eigener.istHost);
+    btn.textContent = istHost
+      ? (imWarteraum ? "Warteraum schließen" : "Spiel abbrechen")
+      : (imWarteraum ? "Warteraum verlassen" : "Spiel verlassen");
   }
 }
 
@@ -619,9 +628,12 @@ document.getElementById("btn-spiel-abbrechen").addEventListener("click", () => {
   const zustand = gameService.getZustand();
   const eigener = getEigenerSpieler(zustand);
   const istHost = !!(eigener && eigener.istHost);
+  /* Im Warteraum ist noch keine Runde in der Luft — der Satz über die
+     verteilten Karten wäre dort schlicht falsch. */
+  const imWarteraum = zustand.phase === "lobby";
   const frage = istHost
-    ? "Spiel für alle Mitspieler:innen abbrechen?"
-    : "Spiel verlassen? Deine Karten werden gleichmäßig an die übrigen Mitspieler:innen verteilt.";
+    ? (imWarteraum ? "Warteraum schließen? Alle Wartenden fliegen heraus." : "Spiel für alle Mitspieler:innen abbrechen?")
+    : (imWarteraum ? "Warteraum verlassen?" : "Spiel verlassen? Deine Karten werden gleichmäßig an die übrigen Mitspieler:innen verteilt.");
   if (!window.confirm(frage)) return;
   gameService.verlasseSpiel();
 });
@@ -795,6 +807,14 @@ if ("serviceWorker" in navigator) {
 // ---------- Info-Tab / Versionshistorie ----------
 const APP_VERSION = "1.0";
 const APP_CHANGELOG = [
+  {
+    version: "1.4",
+    groups: [
+      { title: "Behoben", items: [
+          "Wer einem Raum beitrat und dann im Warteraum saß, kam dort nicht mehr heraus: der Knopf war ausgeblendet, und Neuladen half nicht — der gemerkte Raumcode holte einen sofort in denselben Warteraum zurück. Jetzt steht „Warteraum verlassen“ oben, und wer geht, bleibt auch nicht als Karteileiche im Raum stehen."
+      ]}
+    ]
+  },
   {
     version: "1.3",
     groups: [

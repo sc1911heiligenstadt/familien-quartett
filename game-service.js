@@ -449,6 +449,14 @@ async function verlasseSpiel() {
   if (raum.hostId === eigeneUid) {
     // Gastgeber bricht das Spiel für alle ab.
     await db.ref(`raeume/${code}/phase`).set("abgebrochen");
+  } else if (raum.phase === "lobby") {
+    // ⚠️ Im Warteraum trägt sich ein Gast direkt selbst aus. Der Umweg über
+    // `austrittAnfragen` würde hier nie ankommen: der Gastgeber arbeitet
+    // Austritte nur in Phase "amZug" ab. In einem Warteraum, den niemand
+    // startet, bliebe der Eintrag als Geist-Spieler stehen — und niemand
+    // räumt ihn je weg. Gefahrlos, weil noch keine Runde in der Luft ist:
+    // es sind weder Karten ausgeteilt noch ist jemand am Zug.
+    await db.ref(`raeume/${code}/spieler/${eigeneUid}`).remove();
   } else {
     // Bitte den Gastgeber, die eigenen Karten zu verteilen, sobald es sicher ist.
     // Map statt Einzelfeld: Verlassen zwei Gäste kurz nacheinander, würde ein
