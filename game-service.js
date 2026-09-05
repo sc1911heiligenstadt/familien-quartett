@@ -208,7 +208,12 @@ function getZustand() {
   const bestaetigtVon = raum.aktuelleRunde && raum.aktuelleRunde.weiterBestaetigtVon
     ? Object.keys(raum.aktuelleRunde.weiterBestaetigtVon)
     : [];
-  const aktiveSpielerAnzahl = spielerListe.filter(s => !s.istAusgeschieden).length;
+  // Die KI-Mitspielenden zaehlen hier NICHT mit. Der Schiedsrichter wartet
+  // nur auf Menschen (siehe aktiveUids weiter unten) -- steht im Nenner die
+  // KI, kann der Zaehler seinen Nenner nie erreichen: bei einem Menschen und
+  // drei KI-Gegnern stand dort dauerhaft "0/4 bereit", und sobald der eine
+  // Mensch tippte, war die Runde vorbei.
+  const aktiveSpielerAnzahl = spielerListe.filter(s => !s.istAusgeschieden && !s.istSimuliert).length;
 
   return {
     raumCode: aktuellerRaumCode,

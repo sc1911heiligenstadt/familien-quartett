@@ -779,6 +779,14 @@ if ("serviceWorker" in navigator) {
 const APP_VERSION = "1.0";
 const APP_CHANGELOG = [
   {
+    version: "1.2",
+    groups: [
+      { title: "Behoben", items: [
+          "Der Zähler auf dem Vergleichsbildschirm zählte die KI-Mitspielenden mit. Bei einem Menschen und drei KI-Gegnern stand dort „0/4 Spieler:innen bereit“ — eine Zahl, die nie erreicht werden konnte, weil die Runde vorbei ist, sobald der eine Mensch getippt hat. Gewartet wurde immer nur auf Menschen; jetzt sagt die Anzeige das auch."
+      ]}
+    ]
+  },
+  {
     version: "1.1",
     groups: [
       { title: "Behoben", items: [
