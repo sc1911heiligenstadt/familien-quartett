@@ -129,6 +129,45 @@ let ownHandRef = null;
 let letzterOeffentlicherZustand = null;
 let letzteEigeneKarten = [];
 let kategorieWahlUnterwegs = false;
+
+/* ⚠️ Aufräumen darf nicht daran hängen, dass jemand danach noch einen Knopf
+   drückt. Bis 05.09.2026 wurde ein Raum ausschliesslich in `neuesSpiel()`
+   gelöscht, also nur über "Neues Spiel" auf dem Endstand oder "Zurück zum
+   Start" nach einem Abbruch. Wer nach der letzten Runde einfach den Tab
+   schloss oder einen Warteraum stehenliess, hinterliess Raum, Spielernamen
+   und Hände dauerhaft in Firebase — es gab keinen Cron, keine Frist und
+   keinen zweiten Löschweg.
+
+   Jetzt merkt der Gastgeber beim Server vor, was beim Verbindungsabbruch
+   passieren soll (`onDisconnect`) — aber nur in Phasen, in denen nichts
+   verloren geht: im Warteraum und nachdem die Partie zu Ende oder
+   abgebrochen ist. Während einer laufenden Runde ist es abgemeldet, sonst
+   räumte ein kurzes Funkloch die Partie für alle weg. */
+const AUFRAEUM_PHASEN = ["lobby", "beendet", "abgebrochen"];
+let aufraeumenGeruestetFuer = null;
+
+function ruesteAufraeumen(code, raum) {
+  if (!code || !raum) return;
+  const soll = raum.hostId === eigeneUid && AUFRAEUM_PHASEN.includes(raum.phase);
+  const uids = Object.keys(raum.spieler || {}).sort();
+  const schluessel = code + "|" + (soll ? uids.join(",") : "aus");
+  if (aufraeumenGeruestetFuer === schluessel) return;
+  aufraeumenGeruestetFuer = schluessel;
+
+  /* Erst die alte Vormerkung raeumen: nach jedem Beitritt kommt eine Hand
+     dazu, die mit weg muss. */
+  const beiTrennung = db.ref().onDisconnect();
+  beiTrennung.cancel();
+  if (!soll) return;
+
+  /* ⚠️ EIN Update über die Wurzel, nicht zwei einzelne Löschungen. Die
+     Rules binden das Löschen von `geheime_karten/$code` an
+     `raeume/$code/hostId` — verschwände der Raum zuerst, erfüllte niemand
+     mehr die Bedingung und die Hände blieben für immer liegen. */
+  const daten = { [`raeume/${code}`]: null };
+  uids.forEach(uid => { daten[`geheime_karten/${code}/${uid}`] = null; });
+  beiTrennung.update(daten);
+}
 let botZugGeplantFuer = null;
 
 const authBereit = new Promise(resolve => {
@@ -268,6 +307,7 @@ function betretRaumLokal(code) {
   roomRef.on("value", snap => {
     letzterOeffentlicherZustand = snap.val();
     if (!letzterOeffentlicherZustand) return; // Raum wurde beendet/gelöscht
+    ruesteAufraeumen(code, letzterOeffentlicherZustand);
     pruefeUndLoeseAlsHostAus();
     benachrichtige();
   });
@@ -449,6 +489,10 @@ async function verlasseSpiel() {
   if (raum.hostId === eigeneUid) {
     // Gastgeber bricht das Spiel für alle ab.
     await db.ref(`raeume/${code}/phase`).set("abgebrochen");
+    /* ⚠️ Direkt danach wird der Horcher abgemeldet — die Phase "abgebrochen"
+       sähe dieses Gerät also nie und hätte das Aufräumen nie vorgemerkt.
+       Schlösse der Gastgeber jetzt den Tab, bliebe der Raum stehen. */
+    ruesteAufraeumen(code, Object.assign({}, raum, { phase: "abgebrochen" }));
   } else if (raum.phase === "lobby") {
     // ⚠️ Im Warteraum trägt sich ein Gast direkt selbst aus. Der Umweg über
     // `austrittAnfragen` würde hier nie ankommen: der Gastgeber arbeitet

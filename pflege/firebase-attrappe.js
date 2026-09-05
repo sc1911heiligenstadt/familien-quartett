@@ -67,24 +67,73 @@ function macheDb() {
     return { val: () => w, exists: () => w !== null, key: teile(pfad).pop() || null };
   }
 
-  function ref(pfad) {
+  /* Ein "Client" ist ein Geraet. Baum und Horcher teilen sich alle, aber die
+     onDisconnect-Vormerkungen NICHT — sonst nimmt der Gast dem Gastgeber sein
+     Aufraeumen wieder weg, sobald er selbst `cancel()` ruft. Genau das
+     passiert in echtem Firebase nie: dort haengt die Vormerkung an der
+     Verbindung. `macheDb()` gibt einen Client zurueck, `_neuerClient()` einen
+     weiteren am selben Baum. */
+  function macheClient() {
+    let beiTrennung = [];    // {pfad, art, wert}
+
+    function onDisconnect(pfad) {
+      return {
+        set: w => { beiTrennung.push({ pfad, art: 'set', wert: w }); return Promise.resolve(); },
+        remove: () => { beiTrennung.push({ pfad, art: 'remove' }); return Promise.resolve(); },
+        update: obj => { beiTrennung.push({ pfad, art: 'update', wert: obj }); return Promise.resolve(); },
+        cancel: () => {
+          beiTrennung = beiTrennung.filter(e => e.pfad !== pfad);
+          return Promise.resolve();
+        }
+      };
+    }
+
+    function ref(pfad) {
+      return {
+        pfad,
+        onDisconnect: () => onDisconnect(pfad),
+        once: () => Promise.resolve(macheSnap(pfad)),
+        set: w => { schreib(pfad, aufloesen(w)); melde(); return Promise.resolve(); },
+        remove: () => { schreib(pfad, null); melde(); return Promise.resolve(); },
+        update: obj => {
+          Object.keys(obj).forEach(k => schreib(pfad + '/' + k, aufloesen(obj[k])));
+          melde(); return Promise.resolve();
+        },
+        push: w => {
+          const id = 'p' + (++pushZaehler);
+          if (w !== undefined) { schreib(pfad + '/' + id, aufloesen(w)); melde(); }
+          return { key: id };
+        },
+        on: (art, rueckruf) => { horcher.push({ pfad, art, rueckruf }); rueckruf(macheSnap(pfad)); return rueckruf; },
+        off: () => { for (let i = horcher.length - 1; i >= 0; i--) if (horcher[i].pfad === pfad) horcher.splice(i, 1); },
+        child: k => ref(pfad + '/' + k)
+      };
+    }
+
     return {
-      pfad,
-      once: () => Promise.resolve(macheSnap(pfad)),
-      set: w => { schreib(pfad, aufloesen(w)); melde(); return Promise.resolve(); },
-      remove: () => { schreib(pfad, null); melde(); return Promise.resolve(); },
-      update: obj => {
-        Object.keys(obj).forEach(k => schreib(pfad + '/' + k, aufloesen(obj[k])));
-        melde(); return Promise.resolve();
-      },
-      push: w => {
-        const id = 'p' + (++pushZaehler);
-        if (w !== undefined) { schreib(pfad + '/' + id, aufloesen(w)); melde(); }
-        return { key: id };
-      },
-      on: (art, rueckruf) => { horcher.push({ pfad, art, rueckruf }); rueckruf(macheSnap(pfad)); return rueckruf; },
-      off: () => { for (let i = horcher.length - 1; i >= 0; i--) if (horcher[i].pfad === pfad) horcher.splice(i, 1); },
-      child: k => ref(pfad + '/' + k)
+      ref: p => ref(p || ''),
+      _baum: () => baum,
+      _schreibZaehler: () => schreibZaehler,
+      get _TS() { return TS; },
+      /* Ein weiteres Geraet am selben Baum, mit eigener Trennungs-Vormerkung. */
+      _neuerClient: macheClient,
+      /* Was steht fuer den Verbindungsabbruch vorgemerkt? */
+      _beiTrennung: () => beiTrennung.slice(),
+      /* Verbindung kappen: fuehrt das Vorgemerkte aus, wie es der
+         Firebase-Server tut. */
+      _trenne: () => {
+        const liste = beiTrennung.slice();
+        beiTrennung = [];
+        liste.forEach(e => {
+          if (e.art === 'set') schreib(e.pfad, aufloesen(e.wert));
+          else if (e.art === 'remove') schreib(e.pfad, null);
+          else if (e.art === 'update') {
+            Object.keys(e.wert).forEach(k => schreib(e.pfad ? e.pfad + '/' + k : k, aufloesen(e.wert[k])));
+          }
+        });
+        melde();
+        return liste.length;
+      }
     };
   }
 
@@ -105,12 +154,7 @@ function macheDb() {
     return w;
   }
 
-  return {
-    ref: p => ref(p || ''),
-    _baum: () => baum,
-    _schreibZaehler: () => schreibZaehler,
-    _TS: TS
-  };
+  return macheClient();
 }
 
 module.exports = { macheDb };

@@ -841,6 +841,14 @@ if ("serviceWorker" in navigator) {
 const APP_VERSION = "1.0";
 const APP_CHANGELOG = [
   {
+    version: "1.6",
+    groups: [
+      { title: "Behoben", items: [
+          "Ein Raum wurde nur gelöscht, wenn der Gastgeber danach noch „Neues Spiel“ oder „Zurück zum Start“ drückte. Wer nach der letzten Runde einfach den Tab schloss oder einen Warteraum stehenließ, ließ Raum, Namen und Karten dauerhaft liegen. Jetzt räumt sich ein verlassener Raum von selbst auf, sobald das Gerät des Gastgebers weg ist — während einer laufenden Runde ausdrücklich nicht, damit ein Funkloch nicht die ganze Partie beendet."
+      ]}
+    ]
+  },
+  {
     version: "1.5",
     groups: [
       { title: "Behoben", items: [
