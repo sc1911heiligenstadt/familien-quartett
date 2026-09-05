@@ -717,10 +717,27 @@ document.getElementById("btn-kb-speichern").addEventListener("click", async () =
     fehlerEl.textContent = istFamilie ? "Bitte einen Namen eingeben." : "Bitte Name und Rolle ausfüllen.";
     return;
   }
+  /* ⚠️ Prüfen statt ersetzen. Vorher stand hier `Number(x) || 0`. Das Feld
+     ist zwar ein echtes `<input type="number">`, aber ein geleertes Feld
+     liefert einen leeren String — und `Number("") || 0` ist 0. Die Karte
+     wurde dann mit 0 gespeichert, ohne Meldung, und verlor in dieser
+     Kategorie fortan jede Runde. Ein Komma wird zusätzlich als Komma
+     verstanden, damit die deutsche Schreibweise nicht ins Leere läuft. */
   const eigenschaften = {};
+  const schlecht = [];
   document.querySelectorAll("#kb-eigenschaften-felder input").forEach(input => {
-    eigenschaften[input.dataset.kategorie] = Number(input.value) || 0;
+    const roh = String(input.value || "").trim().replace(",", ".");
+    const wert = roh === "" ? NaN : Number(roh);
+    const beschriftung = (input.previousElementSibling && input.previousElementSibling.textContent) || input.dataset.kategorie;
+    if (!isFinite(wert)) { schlecht.push(beschriftung.trim()); return; }
+    eigenschaften[input.dataset.kategorie] = wert;
   });
+  if (schlecht.length) {
+    fehlerEl.textContent = schlecht.length === 1
+      ? `„${schlecht[0]}“ braucht eine Zahl.`
+      : `Diese Felder brauchen eine Zahl: ${schlecht.join(", ")}.`;
+    return;
+  }
   const daten = {
     name,
     rolle,
@@ -778,6 +795,14 @@ if ("serviceWorker" in navigator) {
 // ---------- Info-Tab / Versionshistorie ----------
 const APP_VERSION = "1.0";
 const APP_CHANGELOG = [
+  {
+    version: "1.3",
+    groups: [
+      { title: "Behoben", items: [
+          "Ein geleertes Wertefeld in der Kartenverwaltung setzte die Karte stillschweigend auf 0 — gemeldet wurde nichts, die Maske sprang zurück, als hätte alles geklappt, und die Karte verlor in dieser Kategorie danach jede Runde. Jetzt wird ein Feld ohne Zahl abgelehnt statt umgedeutet, und ein Komma wird als Komma verstanden."
+      ]}
+    ]
+  },
   {
     version: "1.2",
     groups: [
