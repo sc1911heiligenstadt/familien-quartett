@@ -466,3 +466,11 @@ nav.tabs button.active { color: var(--primary); border-bottom-color: var(--prima
   border-top: 1px solid var(--border);
   font-size: 14px;
 }
+
+/* Die Karte „Funktionen“ im Info-Reiter teilt sich die Optik mit der frueheren
+   Aenderungsliste. font-size gehoert mit: die Schriftgroesse der Liste hing an
+   .changelog-entry, und genau diese Klasse hat die Funktionen-Karte nicht. */
+#funktionen-list { display: flex; flex-direction: column; gap: 18px; font-size: 13px; }
+.changelog-group { display: flex; flex-direction: column; gap: 4px; }
+.changelog-group .cg-title { font-weight: 700; font-size: 14px; color: var(--primary); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 2px; }
+.changelog-group .cg-items { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 3px; color: var(--text); line-height: 1.6; }

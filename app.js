@@ -839,7 +839,62 @@ if ("serviceWorker" in navigator) {
 
 // ---------- Info-Tab / Versionshistorie ----------
 const APP_VERSION = "1.0";
+
+// Was die App kann — die Karte „Funktionen“ im Info-Reiter. Hier steht der
+// Zustand, nicht die Änderung: keine Versionsnummern, kein „neu“, kein „jetzt“.
+// Die Historie bleibt in APP_CHANGELOG darunter stehen und wird weitergepflegt,
+// angezeigt wird sie seit 07.09.2026 nicht mehr.
+const APP_FUNKTIONEN = [
+  { title: "Was hier gespielt wird", items: [
+      "Quartett nach dem Vorbild des klassischen Auto-Quartetts, auf mehreren Geräten gleichzeitig.",
+      "Ein Gerät eröffnet den Raum und gibt den Raumcode weiter, die anderen treten damit bei.",
+      "Bis zu 8 Mitspielende. Die eigene Hand sieht nur man selbst."
+  ]},
+  { title: "So läuft eine Runde", items: [
+      "Wer am Zug ist, sagt eine Eigenschaft seiner obersten Karte an.",
+      "Alle Karten werden nebeneinander aufgedeckt; der höchste Wert gewinnt den Stich.",
+      "Bei Gleichstand kommt eine Bockrunde: der Pott geht an die nächste gewonnene Runde.",
+      "Es geht weiter, sobald alle Mitspielenden am Gerät auf „Weiter“ getippt haben. Auf Test-Spieler wartet niemand."
+  ]},
+  { title: "Zwei Kartensets, drei Deckgrößen", items: [
+      "Vor dem Eröffnen wählbar: Familien-Quartett oder Auto-Quartett.",
+      "Dazu die Größe des Decks — klein mit 5 Karten je Person, normal mit 10 oder groß mit allem, was der Kartenpool hergibt."
+  ]},
+  { title: "Eigene Karten", items: [
+      "Unter „Karten bearbeiten“ lassen sich Karten anlegen, umbenennen, mit einem eigenen Foto versehen und in ihren Werten ändern.",
+      "Eine geänderte Karte geht auf Knopfdruck wieder auf das Original zurück.",
+      "Unter „Kriterien bearbeiten“ steht, wie die Vergleichswerte heißen und welches Symbol sie tragen.",
+      "Beides gilt je Kartenset getrennt: das Familien- und das Auto-Deck kommen sich nicht in die Quere."
+  ]},
+  { title: "Der Familien-Code", items: [
+      "Karten, Kriterien und Bestenliste hängen an einem selbst gewählten Familien-Code — so bekommt jede Familie ihr eigenes Quartett.",
+      "Einmal eingegeben, merkt sich das Gerät den Code.",
+      "Er wirkt wie ein gemeinsames Passwort: wer ihn kennt, sieht eure Karten und eure Bestenliste. Er gehört nur in die Familie."
+  ]},
+  { title: "Warteraum und Bestenliste", items: [
+      "Im Warteraum lassen sich Test-Spieler dazusetzen, wenn gerade niemand sonst da ist.",
+      "Wer den Warteraum verlässt, bleibt nicht als Karteileiche im Raum stehen.",
+      "Die Bestenliste hält über alle beendeten Partien fest, wer wie oft gespielt und gewonnen hat, samt Siegquote."
+  ]},
+  { title: "Grenzen und Datenschutz", items: [
+      "Es gibt kein Konto und keine E-Mail-Adresse; gespeichert wird nur der selbst gewählte Anzeigename.",
+      "Spielstand, Karten und Fotos laufen über die Echtzeit-Datenbank von Google (Firebase), Rechenzentrum in Belgien.",
+      "Wer das nicht möchte, nimmt einen Spitznamen und lädt keine Fotos hoch.",
+      "Die Kopfzeile zeigt, ob die Verbindung steht — im Funkloch kommt beim Rest der Runde nichts an."
+  ]}
+];
+
 const APP_CHANGELOG = [
+  {
+    version: "1.7",
+    groups: [
+      { title: "Im Info-Reiter steht jetzt, was die App kann", items: [
+          "Die Liste der Änderungen und die Versionsnummer sind aus dem Info-Reiter verschwunden.",
+          "Stattdessen steht dort die Karte „Funktionen“: was die App kann, nach Themen geordnet.",
+          "Was sich geändert hat, steht weiterhin in den Neuigkeiten auf der Startseite der Tools-Übersicht."
+      ]}
+    ]
+  },
   {
     version: "1.6",
     groups: [
@@ -934,8 +989,27 @@ function activateTab(name) {
   document.querySelectorAll(".tab-section").forEach((s) => s.classList.toggle("active", s.id === "tab-" + name));
 }
 
+// Die Karte „Funktionen“ im Info-Reiter. Nutzt dieselben CSS-Klassen wie früher
+// die Änderungsliste (.changelog-group, .cg-title, .cg-items), damit beide
+// Karten gleich aussehen.
+function renderFunktionen() {
+  const container = document.getElementById("funktionen-list");
+  if (!container) return;
+  container.innerHTML = APP_FUNKTIONEN.map((g) => `
+    <div class="changelog-group">
+      <div class="cg-title">${escapeHtml(g.title)}</div>
+      <ul class="cg-items">${g.items.map((i) => `<li>${escapeHtml(i)}</li>`).join("")}</ul>
+    </div>
+  `).join("");
+}
+
+// Die Änderungsliste steht seit 07.09.2026 NICHT mehr im Info-Reiter: dort
+// sollen nur die Funktionen der App stehen. APP_CHANGELOG bleibt in dieser
+// Datei gepflegt und wird weiter geschrieben — es ist die Quelle für die
+// Anleitung und für die Neuigkeiten-Meldungen. Diese Funktion steigt darum
+// still aus, wenn es das Ziel nicht gibt, statt beim Seitenstart abzubrechen.
+// Ebenso die Versionsplakette: sie stand nur im Info-Reiter und ist mit ihm weg.
 function renderVersionInfo() {
-  document.querySelectorAll("#version-badge, #version-badge-2").forEach((el) => { if (el) el.textContent = "v" + APP_VERSION; });
   const box = document.getElementById("changelog-list");
   if (!box) return;
   box.innerHTML = APP_CHANGELOG.map((entry) => `
@@ -951,6 +1025,7 @@ function setupInfoTab() {
   document.querySelectorAll("nav.tabs button[data-tab]").forEach((b) => {
     b.addEventListener("click", () => activateTab(b.dataset.tab));
   });
+  renderFunktionen();
   renderVersionInfo();
 }
 
