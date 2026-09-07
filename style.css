@@ -431,3 +431,38 @@ nav.tabs button.active { color: var(--primary); border-bottom-color: var(--prima
 .changelog-entry .cv { font-weight: 700; color: var(--primary); margin-bottom: 8px; }
 .changelog-entry .cgt { font-weight: 600; font-size: 13px; margin: 8px 0 4px; }
 .changelog-entry ul { margin: 0; padding-left: 20px; color: var(--muted); line-height: 1.6; }
+
+/* Datenschutz-Karte: die Absaetze zu Firebase und zum Familien-Code sind lang
+   und standen als Textwand untereinander -- eigene Ueberschrift und Trennlinie
+   je Thema. Der Text ist dabei Wort fuer Wort unveraendert geblieben; die
+   fetten Anfaenge sind zu <h3> geworden. Gleiche Bauform wie in
+   ToolsUebersicht -- dort heisst das Blau --blue, hier --primary (gleicher
+   Wert #1a56a0); ein --gray gibt es hier nicht, deshalb steht der Grauwert
+   fest. Eine leere var() wuerde die ganze Regel verwerfen. */
+#ds-info-karte p { line-height: 1.65; }
+#ds-info-karte .ds-intro { margin-bottom: 14px; }
+#ds-info-karte .ds-nachsatz { margin-top: 14px; }
+#ds-info-karte .ds-verantwortlich {
+  margin-top: 14px;
+  background: #f4f5f7;
+  border-left: 3px solid var(--primary);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 14px;
+}
+#ds-info-karte .ds-block {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+#ds-info-karte .ds-block h3 {
+  color: var(--primary);
+  font-size: 15px;
+  margin: 0 0 8px;
+}
+#ds-info-karte .ds-links {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+}
